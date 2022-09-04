@@ -1,0 +1,21 @@
+{
+	"modListVersion": 2,
+	"modList": [{
+		"modid": "${modId}",
+		"name": "${modName}",
+		"description": "A plugin for BetterQuesting to add EU tasks.",
+		"version": "${modVersion}",
+		"mcversion": "${minecraftVersion}",
+		"url": "https://github.com/0xKate/BQEnergyExpansion",
+		"updateUrl": "",
+		"authorList": ["0xKate"],
+		"credits": "Mod Content Developed by 0xKate.\n Buildscript and Mod Template by SinTho0r4s and the GTNH Team.\n Huge thanks to all the people still working on 1.7.10",
+		"logoFile": "",
+		"screenshots": [],
+		"parent": "",
+		"requiredMods": [],
+		"dependencies": [],
+		"dependants": [],
+		"useDependencyInformation": true
+	}]
+}
