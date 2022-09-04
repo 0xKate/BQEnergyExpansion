@@ -1,6 +1,7 @@
 package zeroxstudios.bqenergyexpansion.core;
 
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
 import org.apache.logging.log4j.LogManager;
@@ -10,6 +11,9 @@ import org.apache.logging.log4j.Logger;
 public class BQEnergyExpansion {
 
     private static Logger LOG = LogManager.getLogger(Tags.MODID);
+
+    @Instance(Tags.MODID)
+    public static BQEnergyExpansion instance;
 
     @SidedProxy(clientSide = Tags.GROUPNAME + ".core.ClientProxy", serverSide = Tags.GROUPNAME + ".core.CommonProxy")
     public static CommonProxy proxy;

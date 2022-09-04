@@ -1,7 +1,9 @@
 package zeroxstudios.bqenergyexpansion.core;
 
 import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import zeroxstudios.bqenergyexpansion.blocks.BlockManager;
+import zeroxstudios.bqenergyexpansion.client.gui.EnergyStationUIHandler;
 
 public class CommonProxy {
 
@@ -14,6 +16,7 @@ public class CommonProxy {
                 "I am " + Tags.MODNAME + " at version " + Tags.VERSION + " and group name " + Tags.GROUPNAME);
 
         BlockManager.init();
+        NetworkRegistry.INSTANCE.registerGuiHandler(BQEnergyExpansion.instance, new EnergyStationUIHandler());
     }
 
     // load "Do your mod setup. Build whatever data structures you care about. Register recipes."
