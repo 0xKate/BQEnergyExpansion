@@ -1,4 +1,4 @@
-package zeroxstudios.bqenergyexpansion;
+package zeroxstudios.bqenergyexpansion.core;
 
 import java.io.File;
 import net.minecraftforge.common.config.Configuration;

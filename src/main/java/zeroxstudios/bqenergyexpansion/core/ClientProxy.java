@@ -1,13 +1,17 @@
-package zeroxstudios.bqenergyexpansion;
+package zeroxstudios.bqenergyexpansion.core;
 
 import cpw.mods.fml.common.event.*;
+import zeroxstudios.bqenergyexpansion.client.CreativeTab;
 
 public class ClientProxy extends CommonProxy {
 
     // preInit "Run before anything else. Read your config, create blocks, items,
     // etc, and register them with the GameRegistry."
+    public CreativeTab creativeTab;
+
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
+        creativeTab = new CreativeTab();
     }
 
     // load "Do your mod setup. Build whatever data structures you care about. Register recipes."

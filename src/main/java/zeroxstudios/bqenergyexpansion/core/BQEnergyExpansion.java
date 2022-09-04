@@ -1,4 +1,4 @@
-package zeroxstudios.bqenergyexpansion;
+package zeroxstudios.bqenergyexpansion.core;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
@@ -11,7 +11,7 @@ public class BQEnergyExpansion {
 
     private static Logger LOG = LogManager.getLogger(Tags.MODID);
 
-    @SidedProxy(clientSide = Tags.GROUPNAME + ".ClientProxy", serverSide = Tags.GROUPNAME + ".CommonProxy")
+    @SidedProxy(clientSide = Tags.GROUPNAME + ".core.ClientProxy", serverSide = Tags.GROUPNAME + ".core.CommonProxy")
     public static CommonProxy proxy;
 
     @Mod.EventHandler

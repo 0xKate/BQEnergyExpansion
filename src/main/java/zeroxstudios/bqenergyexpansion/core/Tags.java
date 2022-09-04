@@ -1,4 +1,4 @@
-package zeroxstudios.bqenergyexpansion;
+package zeroxstudios.bqenergyexpansion.core;
 
 // Use this class for Strings only. Do not import any classes here. It will lead to issues with Mixins if in use!
 

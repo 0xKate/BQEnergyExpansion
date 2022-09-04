@@ -1,6 +1,7 @@
-package zeroxstudios.bqenergyexpansion;
+package zeroxstudios.bqenergyexpansion.core;
 
 import cpw.mods.fml.common.event.*;
+import zeroxstudios.bqenergyexpansion.blocks.BlockManager;
 
 public class CommonProxy {
 
@@ -11,6 +12,8 @@ public class CommonProxy {
         BQEnergyExpansion.info(Config.greeting);
         BQEnergyExpansion.info(
                 "I am " + Tags.MODNAME + " at version " + Tags.VERSION + " and group name " + Tags.GROUPNAME);
+
+        BlockManager.init();
     }
 
     // load "Do your mod setup. Build whatever data structures you care about. Register recipes."
