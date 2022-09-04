@@ -8,16 +8,16 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import zeroxstudios.bqenergyexpansion.blocks.EnergyStationContainer;
-import zeroxstudios.bqenergyexpansion.blocks.EnergyStationTileEnt;
+import zeroxstudios.bqenergyexpansion.blocks.EnergyStationEUMachine;
 import zeroxstudios.bqenergyexpansion.core.Tags;
 
 public class EnergyStationUIContainer extends GuiContainer {
     private final ResourceLocation gui =
             new ResourceLocation(Tags.MODID, "textures/gui/container/energy_station_ui.png");
     private final InventoryPlayer inventory;
-    private final EnergyStationTileEnt tile;
+    private final EnergyStationEUMachine tile;
 
-    public EnergyStationUIContainer(EnergyStationTileEnt tileEnt, EntityPlayer player) {
+    public EnergyStationUIContainer(EnergyStationEUMachine tileEnt, EntityPlayer player) {
         super(new EnergyStationContainer(tileEnt, player));
         inventory = player.inventory;
         this.tile = tileEnt;

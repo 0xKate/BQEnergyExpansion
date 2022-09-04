@@ -30,7 +30,7 @@ public class EnergyStation extends BlockContainer {
         if (world.isRemote) return true;
 
         TileEntity tile = world.getTileEntity(x, y, z);
-        if (tile instanceof EnergyStationTileEnt) {
+        if (tile instanceof EnergyStationEUMachine) {
             player.openGui(BQEnergyExpansion.instance, 0, world, x, y, z);
             return true;
         }
@@ -42,8 +42,8 @@ public class EnergyStation extends BlockContainer {
         if (world.isRemote) return;
         ArrayList<ItemStack> itemsToDrop = new ArrayList<>();
         Object tile = world.getTileEntity(x, y, z);
-        if (tile instanceof EnergyStationTileEnt) {
-            EnergyStationTileEnt ess = (EnergyStationTileEnt) tile;
+        if (tile instanceof EnergyStationEUMachine) {
+            EnergyStationEUMachine ess = (EnergyStationEUMachine) tile;
             for (int i = 0; i < ess.getSizeInventory(); i++) {
                 ItemStack stack = ess.getStackInSlot(i);
                 if (stack != null) itemsToDrop.add(stack.copy());
@@ -60,6 +60,6 @@ public class EnergyStation extends BlockContainer {
 
     @Override
     public TileEntity createNewTileEntity(World w, int p_149915_2_) {
-        return new EnergyStationTileEnt();
+        return new EnergyStationEUMachine();
     }
 }

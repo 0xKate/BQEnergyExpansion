@@ -6,10 +6,10 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 public class EnergyStationContainer extends Container {
-    private EnergyStationTileEnt tile;
+    private EnergyStationEUMachine tile;
     private int slotID = 0;
 
-    public EnergyStationContainer(EnergyStationTileEnt tileEnt, EntityPlayer player) {
+    public EnergyStationContainer(EnergyStationEUMachine tileEnt, EntityPlayer player) {
         this.tile = tileEnt;
 
         // Storage

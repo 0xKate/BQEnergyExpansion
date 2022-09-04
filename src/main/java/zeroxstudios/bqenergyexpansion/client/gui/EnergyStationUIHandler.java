@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import zeroxstudios.bqenergyexpansion.blocks.EnergyStationContainer;
-import zeroxstudios.bqenergyexpansion.blocks.EnergyStationTileEnt;
+import zeroxstudios.bqenergyexpansion.blocks.EnergyStationEUMachine;
 
 public class EnergyStationUIHandler implements IGuiHandler {
     /**
@@ -23,10 +23,10 @@ public class EnergyStationUIHandler implements IGuiHandler {
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         TileEntity tileEnt = world.getTileEntity(x, y, z);
 
-        if (tileEnt instanceof EnergyStationTileEnt) {
+        if (tileEnt instanceof EnergyStationEUMachine) {
             if (ID == 0) // Gui ID for storage block, will add later
             {
-                return new EnergyStationContainer((EnergyStationTileEnt) tileEnt, player);
+                return new EnergyStationContainer((EnergyStationEUMachine) tileEnt, player);
             }
         }
         return null;
@@ -49,10 +49,10 @@ public class EnergyStationUIHandler implements IGuiHandler {
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         TileEntity tileEnt = world.getTileEntity(x, y, z);
 
-        if (tileEnt instanceof EnergyStationTileEnt) {
+        if (tileEnt instanceof EnergyStationEUMachine) {
             if (ID == 0) // Gui ID for storage block, will add later
             {
-                return new EnergyStationUIContainer((EnergyStationTileEnt) tileEnt, player);
+                return new EnergyStationUIContainer((EnergyStationEUMachine) tileEnt, player);
             }
         }
         return null;
