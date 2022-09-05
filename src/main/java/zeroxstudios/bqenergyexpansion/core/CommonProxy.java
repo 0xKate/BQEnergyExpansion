@@ -3,7 +3,8 @@ package zeroxstudios.bqenergyexpansion.core;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import zeroxstudios.bqenergyexpansion.blocks.BlockManager;
-import zeroxstudios.bqenergyexpansion.client.gui.EnergyStationUIHandler;
+import zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation.gui.ESSGuiHandler;
+import zeroxstudios.bqenergyexpansion.waila.BQEnergyWailaModule;
 
 public class CommonProxy {
 
@@ -16,14 +17,17 @@ public class CommonProxy {
                 "I am " + Tags.MODNAME + " at version " + Tags.VERSION + " and group name " + Tags.GROUPNAME);
 
         BlockManager.init();
-        NetworkRegistry.INSTANCE.registerGuiHandler(BQEnergyExpansion.instance, new EnergyStationUIHandler());
+        NetworkRegistry.INSTANCE.registerGuiHandler(BQEnergyExpansion.instance, new ESSGuiHandler());
     }
 
     // load "Do your mod setup. Build whatever data structures you care about. Register recipes."
     public void init(FMLInitializationEvent event) {}
 
     // postInit "Handle interaction with other mods, complete your setup based on this."
-    public void postInit(FMLPostInitializationEvent event) {}
+    public void postInit(FMLPostInitializationEvent event) {
+
+        BQEnergyWailaModule.register();
+    }
 
     public void serverAboutToStart(FMLServerAboutToStartEvent event) {}
 

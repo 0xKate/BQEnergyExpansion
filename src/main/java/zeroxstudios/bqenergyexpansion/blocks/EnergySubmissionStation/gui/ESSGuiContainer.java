@@ -1,4 +1,4 @@
-package zeroxstudios.bqenergyexpansion.client.gui;
+package zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -7,18 +7,18 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
-import zeroxstudios.bqenergyexpansion.blocks.EnergyStationContainer;
-import zeroxstudios.bqenergyexpansion.blocks.EnergyStationEUMachine;
+import zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation.ESSContainer;
+import zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation.ESSTileEntityEU;
 import zeroxstudios.bqenergyexpansion.core.Tags;
 
-public class EnergyStationUIContainer extends GuiContainer {
+public class ESSGuiContainer extends GuiContainer {
     private final ResourceLocation gui =
             new ResourceLocation(Tags.MODID, "textures/gui/container/energy_station_ui.png");
     private final InventoryPlayer inventory;
-    private final EnergyStationEUMachine tile;
+    private final ESSTileEntityEU tile;
 
-    public EnergyStationUIContainer(EnergyStationEUMachine tileEnt, EntityPlayer player) {
-        super(new EnergyStationContainer(tileEnt, player));
+    public ESSGuiContainer(ESSTileEntityEU tileEnt, EntityPlayer player) {
+        super(new ESSContainer(tileEnt, player));
         inventory = player.inventory;
         this.tile = tileEnt;
     }

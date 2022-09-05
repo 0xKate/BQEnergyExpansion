@@ -1,4 +1,4 @@
-package zeroxstudios.bqenergyexpansion.blocks;
+package zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation;
 
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
@@ -11,10 +11,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class EnergyStationEUMachine extends EnergyStationTileEnt implements IEnergySink {
+public class ESSTileEntityEU extends ESSTileEntityBase implements IEnergySink {
 
-    private double internalEUStorage = 0;
-    private double internalEUMax = 100000;
+    public double internalEUStorage = 0;
+    public double internalEUMax = 100000;
     private int tier = 4;
     private float guiChargeLevel;
     private boolean connectedToEUNet = false;
@@ -65,8 +65,9 @@ public class EnergyStationEUMachine extends EnergyStationTileEnt implements IEne
      */
     @Override
     public double injectEnergy(ForgeDirection directionFrom, double amount, double voltage) {
-        // TODO: Interpret Quest Voltage Here
         internalEUStorage += amount;
+
+        // Per Ic2 usage doc, should always return zero, and overfill the buffer.
         return 0;
     }
 
@@ -90,14 +91,14 @@ public class EnergyStationEUMachine extends EnergyStationTileEnt implements IEne
         super.validate();
         IC2.tickHandler.addSingleTickCallback(this.worldObj, new ITickCallback() {
             public void tickCallback(World world) {
-                if (!EnergyStationEUMachine.this.isInvalid()
+                if (!ESSTileEntityEU.this.isInvalid()
                         && world.blockExists(
-                                EnergyStationEUMachine.this.xCoord,
-                                EnergyStationEUMachine.this.yCoord,
-                                EnergyStationEUMachine.this.zCoord)) {
-                    EnergyStationEUMachine.this.onLoaded();
-                    if (!EnergyStationEUMachine.this.isInvalid() && (EnergyStationEUMachine.this.enableWorldTick)) {
-                        world.loadedTileEntityList.add(EnergyStationEUMachine.this);
+                                ESSTileEntityEU.this.xCoord,
+                                ESSTileEntityEU.this.yCoord,
+                                ESSTileEntityEU.this.zCoord)) {
+                    ESSTileEntityEU.this.onLoaded();
+                    if (!ESSTileEntityEU.this.isInvalid() && (ESSTileEntityEU.this.enableWorldTick)) {
+                        world.loadedTileEntityList.add(ESSTileEntityEU.this);
                     }
                 }
             }

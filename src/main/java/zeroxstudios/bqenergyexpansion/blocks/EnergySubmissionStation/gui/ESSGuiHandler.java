@@ -1,13 +1,13 @@
-package zeroxstudios.bqenergyexpansion.client.gui;
+package zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation.gui;
 
 import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import zeroxstudios.bqenergyexpansion.blocks.EnergyStationContainer;
-import zeroxstudios.bqenergyexpansion.blocks.EnergyStationEUMachine;
+import zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation.ESSContainer;
+import zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation.ESSTileEntityEU;
 
-public class EnergyStationUIHandler implements IGuiHandler {
+public class ESSGuiHandler implements IGuiHandler {
     /**
      * Returns a Server side Container to be displayed to the user.
      *
@@ -23,10 +23,10 @@ public class EnergyStationUIHandler implements IGuiHandler {
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         TileEntity tileEnt = world.getTileEntity(x, y, z);
 
-        if (tileEnt instanceof EnergyStationEUMachine) {
+        if (tileEnt instanceof ESSTileEntityEU) {
             if (ID == 0) // Gui ID for storage block, will add later
             {
-                return new EnergyStationContainer((EnergyStationEUMachine) tileEnt, player);
+                return new ESSContainer((ESSTileEntityEU) tileEnt, player);
             }
         }
         return null;
@@ -49,10 +49,10 @@ public class EnergyStationUIHandler implements IGuiHandler {
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         TileEntity tileEnt = world.getTileEntity(x, y, z);
 
-        if (tileEnt instanceof EnergyStationEUMachine) {
+        if (tileEnt instanceof ESSTileEntityEU) {
             if (ID == 0) // Gui ID for storage block, will add later
             {
-                return new EnergyStationUIContainer((EnergyStationEUMachine) tileEnt, player);
+                return new ESSGuiContainer((ESSTileEntityEU) tileEnt, player);
             }
         }
         return null;

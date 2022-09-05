@@ -1,4 +1,4 @@
-package zeroxstudios.bqenergyexpansion.blocks;
+package zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -9,7 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 import zeroxstudios.bqenergyexpansion.core.BQEnergyExpansion;
 
-public class EnergyStationTileEnt extends TileEntity implements IInventory {
+public class ESSTileEntityBase extends TileEntity implements IInventory {
 
     private ItemStack[] internalStorage = new ItemStack[15];
 

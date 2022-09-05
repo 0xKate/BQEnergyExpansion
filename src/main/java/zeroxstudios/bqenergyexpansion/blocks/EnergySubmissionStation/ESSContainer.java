@@ -1,15 +1,15 @@
-package zeroxstudios.bqenergyexpansion.blocks;
+package zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class EnergyStationContainer extends Container {
-    private EnergyStationEUMachine tile;
+public class ESSContainer extends Container {
+    private ESSTileEntityEU tile;
     private int slotID = 0;
 
-    public EnergyStationContainer(EnergyStationEUMachine tileEnt, EntityPlayer player) {
+    public ESSContainer(ESSTileEntityEU tileEnt, EntityPlayer player) {
         this.tile = tileEnt;
 
         // Storage

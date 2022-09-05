@@ -1,4 +1,4 @@
-package zeroxstudios.bqenergyexpansion.blocks;
+package zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -13,12 +13,12 @@ import net.minecraft.world.World;
 import zeroxstudios.bqenergyexpansion.core.BQEnergyExpansion;
 import zeroxstudios.bqenergyexpansion.core.Tags;
 
-public class EnergyStation extends BlockContainer {
+public class ESSBlock extends BlockContainer {
 
     public static final String name = "energy_submission_station";
     private final Random rng = new Random();
 
-    protected EnergyStation() {
+    public ESSBlock() {
         super(Material.iron);
         this.setBlockName(Tags.MODID + "." + name);
         this.setBlockTextureName(Tags.MODID + ":" + name);
@@ -30,7 +30,7 @@ public class EnergyStation extends BlockContainer {
         if (world.isRemote) return true;
 
         TileEntity tile = world.getTileEntity(x, y, z);
-        if (tile instanceof EnergyStationEUMachine) {
+        if (tile instanceof ESSTileEntityEU) {
             player.openGui(BQEnergyExpansion.instance, 0, world, x, y, z);
             return true;
         }
@@ -42,8 +42,8 @@ public class EnergyStation extends BlockContainer {
         if (world.isRemote) return;
         ArrayList<ItemStack> itemsToDrop = new ArrayList<>();
         Object tile = world.getTileEntity(x, y, z);
-        if (tile instanceof EnergyStationEUMachine) {
-            EnergyStationEUMachine ess = (EnergyStationEUMachine) tile;
+        if (tile instanceof ESSTileEntityEU) {
+            ESSTileEntityEU ess = (ESSTileEntityEU) tile;
             for (int i = 0; i < ess.getSizeInventory(); i++) {
                 ItemStack stack = ess.getStackInSlot(i);
                 if (stack != null) itemsToDrop.add(stack.copy());
@@ -60,6 +60,6 @@ public class EnergyStation extends BlockContainer {
 
     @Override
     public TileEntity createNewTileEntity(World w, int p_149915_2_) {
-        return new EnergyStationEUMachine();
+        return new ESSTileEntityEU();
     }
 }
