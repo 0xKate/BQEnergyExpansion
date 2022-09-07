@@ -10,6 +10,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import net.minecraft.nbt.NBTTagCompound;
 import zeroxstudios.bqenergyexpansion.blocks.BlockManager;
 import zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation.gui.ESSGuiHandler;
+import zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation.gui.ESSPacketHandler;
 import zeroxstudios.bqenergyexpansion.tasks.factory.FactoryTaskEUCharge;
 import zeroxstudios.bqenergyexpansion.waila.BQEnergyWailaModule;
 
@@ -25,6 +26,7 @@ public class CommonProxy {
 
         BlockManager.init();
         NetworkRegistry.INSTANCE.registerGuiHandler(BQEnergyExpansion.instance, new ESSGuiHandler());
+        ESSPacketHandler.registerHandler();
     }
 
     // load "Do your mod setup. Build whatever data structures you care about. Register recipes."

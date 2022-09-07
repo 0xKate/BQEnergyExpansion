@@ -9,7 +9,7 @@ public interface IEUTask extends ITask {
     /**
      * Submits EU energy to the task
      */
-    int submitEnergy(DBEntry<IQuest> quest, UUID owner, double amount, double voltage);
+    void submitEnergy(DBEntry<IQuest> quest, UUID owner, double amount, double voltage);
 
     /**
      * Checks if you can submit EU energy to the task

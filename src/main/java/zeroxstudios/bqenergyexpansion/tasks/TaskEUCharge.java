@@ -9,92 +9,82 @@ import betterquesting.api2.client.gui.misc.IGuiRect;
 import betterquesting.api2.client.gui.panels.IGuiPanel;
 import betterquesting.api2.storage.DBEntry;
 import betterquesting.api2.utils.ParticipantInfo;
+import betterquesting.api2.utils.Tuple2;
+import bq_standard.tasks.base.TaskProgressableBase;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import javax.annotation.Nullable;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import zeroxstudios.bqenergyexpansion.tasks.factory.FactoryTaskEUCharge;
+import zeroxstudios.bqenergyexpansion.tasks.gui.PanelTaskEUCharge;
 
-public class TaskEUCharge implements ITask, IEUTask {
+public class TaskEUCharge extends TaskProgressableBase<Double> implements ITask, IEUTask {
+    public double requiredEnergy = 0;
+    public String name = "bqenergy.tasks.eu.charge";
+
     @Override
     public String getUnlocalisedName() {
-        return null;
+        return name;
     }
 
     @Override
     public ResourceLocation getFactoryID() {
-        return null;
+        return FactoryTaskEUCharge.INSTANCE.getRegistryName();
     }
 
     @Override
-    public void detect(ParticipantInfo participant, DBEntry<IQuest> quest) {}
-
-    @Override
-    public boolean isComplete(UUID uuid) {
-        return false;
-    }
-
-    @Override
-    public void setComplete(UUID uuid) {}
-
-    @Override
-    public void resetUser(@Nullable UUID uuid) {}
-
-    @Nullable
-    @Override
+    @SideOnly(Side.CLIENT)
     public IGuiPanel getTaskGui(IGuiRect rect, DBEntry<IQuest> quest) {
-        return null;
+        return new PanelTaskEUCharge(rect, this);
     }
 
-    @Nullable
     @Override
+    @SideOnly(Side.CLIENT)
     public GuiScreen getTaskEditor(GuiScreen parent, DBEntry<IQuest> quest) {
         return null;
     }
 
-    /**
-     * Tasks that set this to true will be ignored by quest completion logic.
-     *
-     * @param uuid
-     */
     @Override
-    public boolean ignored(UUID uuid) {
-        return IEUTask.super.ignored(uuid);
+    public NBTTagCompound writeToNBT(NBTTagCompound tags) {
+        tags.setDouble("requiredEnergy", requiredEnergy);
+        return tags;
     }
 
     @Override
-    public List<String> getTextsForSearch() {
-        return IEUTask.super.getTextsForSearch();
-    }
-
-    /**
-     * If users is not null, only the progress for the users in the list will be written to the NBT
-     *
-     * @param nbt
-     * @param users
-     */
-    @Override
-    public NBTTagCompound writeProgressToNBT(NBTTagCompound nbt, @Nullable List<UUID> users) {
-        return null;
-    }
-
-    /**
-     * if merge is true, the progress for some users will be merged with the existing progress, otherwise it will be overwritten
-     *
-     * @param nbt
-     * @param merge
-     */
-    @Override
-    public void readProgressFromNBT(NBTTagCompound nbt, boolean merge) {}
-
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        return null;
+    public void readFromNBT(NBTTagCompound tags) {
+        this.requiredEnergy = tags.getDouble("requiredEnergy");
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {}
+    public Double getUsersProgress(UUID uuid) {
+        Double n = userProgress.get(uuid);
+        return n == null ? 0 : n;
+    }
+
+    @Override
+    public void detect(ParticipantInfo pInfo, DBEntry<IQuest> quest) {
+        final List<Tuple2<UUID, Double>> progress = getBulkProgress(pInfo.ALL_UUIDS);
+
+        progress.forEach((value) -> {
+            if (value.getSecond() >= requiredEnergy) setComplete(value.getFirst());
+        });
+
+        pInfo.markDirtyParty(Collections.singletonList(quest.getID()));
+    }
+
+    @Override
+    public Double readUserProgressFromNBT(NBTTagCompound nbt) {
+        return nbt.getDouble("value");
+    }
+
+    @Override
+    public void writeUserProgressToNBT(NBTTagCompound nbt, Double progress) {
+        nbt.setDouble("value", progress);
+    }
 
     /**
      * Submits raw EU energy to the task
@@ -105,12 +95,19 @@ public class TaskEUCharge implements ITask, IEUTask {
      * @param voltage
      */
     @Override
-    public int submitEnergy(DBEntry<IQuest> quest, UUID owner, double amount, double voltage) {
-        return 0;
+    public void submitEnergy(DBEntry<IQuest> quest, UUID owner, double amount, double voltage) {
+        Double progress = getUsersProgress(owner);
+        progress += amount;
+
+        if (progress < getRequiredEnergy()) {
+            setUserProgress(owner, progress);
+        } else {
+            this.setComplete(owner);
+        }
     }
 
     /**
-     * Checks if the t raw EU energy to the task
+     * Checks if the task accepts raw EU energy
      *
      * @param quest
      * @param owner
@@ -119,6 +116,13 @@ public class TaskEUCharge implements ITask, IEUTask {
      */
     @Override
     public boolean canSubmitEnergy(DBEntry<IQuest> quest, UUID owner, double amount, double voltage) {
-        return false;
+        return getUsersProgress(owner) < requiredEnergy;
+    }
+
+    /**
+     * Returns the amount of energy needed to complete the task
+     */
+    public double getRequiredEnergy() {
+        return this.requiredEnergy;
     }
 }

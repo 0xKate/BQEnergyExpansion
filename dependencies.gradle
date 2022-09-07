@@ -3,5 +3,6 @@
 dependencies {
     compile "com.github.GTNewHorizons:BetterQuesting:${bq_ver}-GTNH:dev"
     compile "com.github.GTNewHorizons:waila:${waila_ver}:dev"
+    compile "com.github.GTNewHorizons:StandardQuestingPack:3.0.193-GTNH:dev"
     compile "net.industrial-craft:industrialcraft-2:${ic2_ver}-experimental:dev"
 }

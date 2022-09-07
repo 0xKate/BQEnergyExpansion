@@ -1,4 +1,10 @@
-tile.bqenergyexpansion.energy_submission_station.name=Energy Submission Station
+tile.bqenergyexpansion.energy_submission_station.name=Energy Submission Station (ESS)
 tile.bqenergyexpansion.energy_submission_station.storage=Energy Submission Station
-bqenergy.eu.storage=Energy
-bqenergy.questlabel=Quest
+
+bqenergy.tasks.eu.charge=EU Charge Task
+bqenergy.gui.ess.title=Energy Submission Station
+
+bqenergy.waila.energy=Energy
+bqenergy.waila.quest=Quest
+bqenergy.waila.task=Task
+bqenergy.waila.owner=Owner

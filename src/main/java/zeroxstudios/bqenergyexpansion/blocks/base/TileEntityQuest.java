@@ -20,7 +20,9 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.util.ForgeDirection;
+import zeroxstudios.bqenergyexpansion.core.BQEnergyExpansion;
 import zeroxstudios.bqenergyexpansion.tasks.IEUTask;
+import zeroxstudios.bqenergyexpansion.tasks.TaskEUCharge;
 
 public class TileEntityQuest extends TileEntityEU {
     // <editor-fold desc="Quest Aware Block Methods">
@@ -115,7 +117,7 @@ public class TileEntityQuest extends TileEntityEU {
         }
     }
 
-    private EntityPlayerMP getPlayerByUUID(UUID uuid) {
+    public static EntityPlayerMP getPlayerByUUID(UUID uuid) {
         MinecraftServer server = MinecraftServer.getServer();
         if (server == null) return null;
 
@@ -127,6 +129,7 @@ public class TileEntityQuest extends TileEntityEU {
     }
 
     public void setupTask(UUID owner, IQuest quest, ITask task) {
+        BQEnergyExpansion.logToChat(String.format("Setting up Task - {[%s], [%s], [%s]}", owner, quest, task));
         if (owner == null || quest == null || task == null) {
             reset();
             return;
@@ -135,6 +138,23 @@ public class TileEntityQuest extends TileEntityEU {
         this.questID = QuestingAPI.getAPI(ApiReference.QUEST_DB).getID(quest);
         this.qCached = new DBEntry<>(questID, quest);
         this.taskID = quest.getTasks().getID(task);
+
+        BQEnergyExpansion.logToChat(
+                String.format("Setting up Task - {[%s], [%s], [%s]}", this.questID, this.qCached, this.taskID));
+
+        if (task instanceof TaskEUCharge) {
+            double req = ((TaskEUCharge) task).getRequiredEnergy();
+            BQEnergyExpansion.logToChat(String.format("Setting Capacity to %s", req));
+            this.setCapacity(req);
+            this.setEnergyStored(0);
+            this.setSinkTier(4);
+            this.markDirty();
+
+            MinecraftServer.getServer()
+                    .getConfigurationManager()
+                    .sendToAllNearExcept(
+                            null, xCoord, yCoord, zCoord, 128, worldObj.provider.dimensionId, getDescriptionPacket());
+        }
 
         if (this.questID < 0 || this.taskID < 0) {
             reset();

@@ -4,6 +4,8 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.ChatComponentText;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -77,5 +79,12 @@ public class BQEnergyExpansion {
 
     public static void error(String message) {
         LOG.error(message);
+    }
+
+    public static void logToChat(String message) {
+        Minecraft mc = Minecraft.getMinecraft();
+        if (mc.thePlayer != null && mc.theWorld != null && mc.theWorld.isRemote) {
+            mc.thePlayer.addChatMessage(new ChatComponentText(message));
+        }
     }
 }

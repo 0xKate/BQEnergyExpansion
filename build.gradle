@@ -4,6 +4,7 @@
  Also, you may replace this file at any time if there is an update available.
  Please check https://github.com/GTNewHorizons/ExampleMod1.7.10/blob/main/build.gradle for updates.
  */
+//file:noinspection Annotator
 
 
 import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation

@@ -1,5 +1,6 @@
 package zeroxstudios.bqenergyexpansion.blocks.base;
 
+import ic2.api.energy.event.EnergyTileEvent;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergySink;
@@ -15,11 +16,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class TileEntityEU extends TileEntityBase implements IEnergySink {
 
     public double internalEUStorage = 0;
-    public double internalEUMax = 0;
+    public double internalEUMax = 100000;
     private boolean connectedToEUNet = false;
     private boolean enableWorldTick;
     private boolean loaded = false;
-    private int tier;
+    private int tier = 1;
 
     /**
      * Get the maximum amount of energy this sink can hold in its buffer.
@@ -36,6 +37,8 @@ public class TileEntityEU extends TileEntityBase implements IEnergySink {
      */
     public void setCapacity(double newMax) {
         this.internalEUMax = newMax;
+        MinecraftForge.EVENT_BUS.post(new EnergyTileEvent(this));
+        this.markDirty();
     }
 
     /**
@@ -53,7 +56,6 @@ public class TileEntityEU extends TileEntityBase implements IEnergySink {
      * This is intended for server -> client synchronization, e.g. to display the stored energy in
      * a GUI through getEnergyStored().
      *
-     * @param amount
      */
     public void setEnergyStored(double amount) {
         internalEUStorage = amount;
@@ -64,14 +66,14 @@ public class TileEntityEU extends TileEntityBase implements IEnergySink {
      *
      * @param newTier IC2 Tier.
      */
-    public void setTier(int newTier) {
+    public void setSinkTier(int newTier) {
         this.tier = newTier;
     }
 
     /**
      * Determine how much energy the sink accepts.
      * <p>
-     * Make sure that injectEnergy() does accepts energy if demandsEnergy() returns anything > 0.
+     * Make sure that injectEnergy() accepts energy if demandsEnergy() returns anything > 0.
      *
      * @return max accepted input in eu
      * @note Modifying the energy net from this method is disallowed.
@@ -91,7 +93,7 @@ public class TileEntityEU extends TileEntityBase implements IEnergySink {
      */
     @Override
     public int getSinkTier() {
-        return 4;
+        return tier;
     }
 
     /**
@@ -178,13 +180,15 @@ public class TileEntityEU extends TileEntityBase implements IEnergySink {
     @Override
     public void readFromNBT(NBTTagCompound tags) {
         super.readFromNBT(tags);
-        this.internalEUStorage = tags.getDouble("energy");
+        this.internalEUStorage = tags.getDouble("internalEUStorage");
+        this.internalEUMax = tags.getDouble("internalEUMax");
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tags) {
         super.writeToNBT(tags);
-        tags.setDouble("energy", this.internalEUStorage);
+        tags.setDouble("internalEUStorage", this.internalEUStorage);
+        tags.setDouble("internalEUMax", this.internalEUMax);
     }
 
     /**

@@ -21,14 +21,12 @@ public class ESSGuiHandler implements IGuiHandler {
      */
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        TileEntity tileEnt = world.getTileEntity(x, y, z);
+        TileEntity tile = world.getTileEntity(x, y, z);
 
-        if (tileEnt instanceof ESSTileEntity) {
-            if (ID == 0) // Gui ID for storage block, will add later
-            {
-                return new ESSContainer((ESSTileEntity) tileEnt, player);
-            }
+        if (ID == 0 && tile instanceof ESSTileEntity) {
+            return new ESSContainer(player.inventory, (ESSTileEntity) tile);
         }
+
         return null;
     }
 
@@ -47,13 +45,10 @@ public class ESSGuiHandler implements IGuiHandler {
      */
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        TileEntity tileEnt = world.getTileEntity(x, y, z);
+        TileEntity tile = world.getTileEntity(x, y, z);
 
-        if (tileEnt instanceof ESSTileEntity) {
-            if (ID == 0) // Gui ID for storage block, will add later
-            {
-                return new ESSGuiContainer((ESSTileEntity) tileEnt, player);
-            }
+        if (ID == 0 && tile instanceof ESSTileEntity) {
+            return new ESSGuiContainer(null, player.inventory, (ESSTileEntity) tile);
         }
         return null;
     }

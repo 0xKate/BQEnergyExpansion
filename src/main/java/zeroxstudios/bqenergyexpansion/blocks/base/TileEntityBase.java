@@ -35,8 +35,6 @@ public class TileEntityBase extends TileEntity implements IInventory {
      * Removes from an inventory slot (first arg) up to a specified number (second arg) of items and returns them in a
      * new stack.
      *
-     * @param slot
-     * @param amount
      */
     @Override
     public ItemStack decrStackSize(int slot, int amount) {
@@ -60,7 +58,6 @@ public class TileEntityBase extends TileEntity implements IInventory {
      * When some containers are closed they call this on each slot, then drop whatever it returns as an EntityItem -
      * like when you close a workbench GUI.
      *
-     * @param slot
      */
     @Override
     public ItemStack getStackInSlotOnClosing(int slot) {
@@ -76,8 +73,6 @@ public class TileEntityBase extends TileEntity implements IInventory {
     /**
      * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
      *
-     * @param slot
-     * @param stack
      */
     @Override
     public void setInventorySlotContents(int slot, ItemStack stack) {
@@ -106,7 +101,7 @@ public class TileEntityBase extends TileEntity implements IInventory {
     }
 
     /**
-     * Returns the maximum stack size for a inventory slot.
+     * Returns the maximum stack size for an inventory slot.
      */
     @Override
     public int getInventoryStackLimit() {
@@ -116,7 +111,6 @@ public class TileEntityBase extends TileEntity implements IInventory {
     /**
      * Do not make give this method the name canInteractWith because it clashes with Container
      *
-     * @param player
      */
     @Override
     public boolean isUseableByPlayer(EntityPlayer player) {
@@ -134,7 +128,7 @@ public class TileEntityBase extends TileEntity implements IInventory {
         for (int i = 0; i < list.tagCount(); ++i) {
             NBTTagCompound comp = list.getCompoundTagAt(i);
             int j = comp.getByte("Slot") & 255;
-            if (j >= 0 && j < internalStorage.length) {
+            if (j < internalStorage.length) {
                 internalStorage[j] = ItemStack.loadItemStackFromNBT(comp);
             }
         }
@@ -169,8 +163,6 @@ public class TileEntityBase extends TileEntity implements IInventory {
     /**
      * Returns true if automation is allowed to insert the given stack (ignoring stack size) into the given slot.
      *
-     * @param slot
-     * @param stack
      */
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) {

@@ -1,6 +1,10 @@
+/**
+ * Portions of this file have been copied from BetterQuesting and is copyrighted by Funwayguy under the terms of the MIT license.
+ */
 package zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -8,53 +12,116 @@ import net.minecraft.item.ItemStack;
 public class ESSContainer extends Container {
     private final ESSTileEntity tile;
 
-    public ESSContainer(ESSTileEntity tileEnt, EntityPlayer player) {
-        this.tile = tileEnt;
+    public ESSContainer(InventoryPlayer inventory, ESSTileEntity tile) {
+        this.tile = tile;
 
-        // Storage
-        int slotID = 0;
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 5; j++) {
-                addSlotToContainer(new Slot(tile, slotID++, 44 + j * 18, 17 + i * 18));
+        this.addSlotToContainer(new Slot(tile, 0, 0, 0) {
+            @Override
+            public boolean isItemValid(ItemStack stack) {
+                return inventory.isItemValidForSlot(0, stack);
+            }
+        });
+
+        this.addSlotToContainer(new Slot(tile, 1, 0, 0) {
+            @Override
+            public boolean isItemValid(ItemStack stack) {
+                return false;
+            }
+        });
+
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 9; ++j) {
+                this.addSlotToContainer(new Slot(inventory, j + i * 9 + 9, j * 18, i * 18));
             }
         }
 
-        // Inventory
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 9; j++) {
-                addSlotToContainer(new Slot(player.inventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
-            }
-        }
-        // Hotbar
-        for (int i = 0; i < 9; i++) {
-            addSlotToContainer(new Slot(player.inventory, i, 8 + i * 18, 142));
+        for (int i = 0; i < 9; ++i) {
+            this.addSlotToContainer(new Slot(inventory, i, i * 18, 58));
         }
     }
 
+    public void moveInventorySlots(int x, int y) {
+        int idx = 2;
+
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 9; ++j) {
+                Slot s = (Slot) inventorySlots.get(idx);
+                s.xDisplayPosition = j * 18 + x;
+                s.yDisplayPosition = i * 18 + y;
+                idx++;
+            }
+        }
+
+        for (int i = 0; i < 9; ++i) {
+            Slot s = (Slot) inventorySlots.get(idx);
+            s.xDisplayPosition = i * 18 + x;
+            s.yDisplayPosition = 58 + y;
+            idx++;
+        }
+    }
+
+    /**
+     * Called when a player shift-clicks on a slot. You must override this or you will crash when someone does that.
+     */
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int slotRaw) {
-        ItemStack stack = null;
-        Slot slot = (Slot) inventorySlots.get(slotRaw);
+    public ItemStack transferStackInSlot(EntityPlayer player, int idx) {
+        if (idx < 0) return null;
+
+        ItemStack itemstack = null;
+        Slot slot = (Slot) this.inventorySlots.get(idx);
 
         if (slot != null && slot.getHasStack()) {
-            ItemStack stackInSlot = slot.getStack();
-            stack = stackInSlot.copy();
+            ItemStack itemstack1 = slot.getStack();
+            itemstack = itemstack1.copy();
 
-            if (slotRaw < 3 * 9) {
-                if (!mergeItemStack(stackInSlot, 3 * 9, inventorySlots.size(), true)) {
+            if (idx == 0) {
+                if (!this.mergeItemStack(itemstack1, 1, 37, true)) {
                     return null;
                 }
-            } else if (!mergeItemStack(stackInSlot, 0, 3 * 9, false)) {
+
+                slot.onSlotChange(itemstack1, itemstack);
+            } else if (slot.isItemValid(itemstack1)) {
+                if (!this.mergeItemStack(itemstack1, 0, 1, false)) {
+                    return null;
+                }
+            } else if (idx < 28) {
+                if (!this.mergeItemStack(itemstack1, 28, 37, false)) {
+                    return null;
+                }
+            } else if (idx < 37) {
+                if (!this.mergeItemStack(itemstack1, 1, 28, false)) {
+                    return null;
+                }
+            } else if (!this.mergeItemStack(itemstack1, 1, 37, false)) {
                 return null;
             }
 
-            if (stackInSlot.stackSize == 0) {
+            if (itemstack1.stackSize == 0) {
                 slot.putStack(null);
             } else {
                 slot.onSlotChanged();
             }
+
+            if (itemstack1.stackSize == itemstack.stackSize) {
+                return null;
+            }
+
+            slot.onPickupFromSlot(player, itemstack1);
         }
-        return stack;
+
+        return itemstack;
+    }
+
+    public void moveSubmitSlot(int x, int y) {
+        Slot s = (Slot) inventorySlots.get(0);
+        s.xDisplayPosition = x;
+        s.yDisplayPosition = y;
+    }
+
+    public void moveReturnSlot(int x, int y) {
+        Slot s = (Slot) inventorySlots.get(1);
+        s.xDisplayPosition = x;
+        s.yDisplayPosition = y;
     }
 
     @Override
