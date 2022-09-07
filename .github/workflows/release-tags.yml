@@ -43,9 +43,12 @@ jobs:
           prerelease: false
           title: "${{ env.RELEASE_VERSION }}"
           files: build/libs/*.jar
-
-      - name: Publish to Maven
-        run: ./gradlew publish
-        env:
-          MAVEN_USER: ${{ secrets.MAVEN_USER }}
-          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+#
+# Do not publish to maven
+#
+#      - name: Publish to Maven
+#        run: ./gradlew publish
+#        env:
+#          MAVEN_USER: ${{ secrets.MAVEN_USER }}
+#          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+#
