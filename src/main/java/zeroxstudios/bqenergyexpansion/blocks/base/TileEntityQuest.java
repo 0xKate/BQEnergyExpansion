@@ -1,3 +1,6 @@
+/**
+ * Portions of this file have been copied from BetterQuesting and is copyrighted by Funwayguy under the terms of the MIT license.
+ */
 package zeroxstudios.bqenergyexpansion.blocks.base;
 
 import betterquesting.api.api.ApiReference;

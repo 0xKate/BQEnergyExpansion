@@ -1,3 +1,6 @@
+/**
+ * Portions of this file have been copied from BetterQuesting and is copyrighted by Funwayguy under the terms of the MIT license.
+ */
 package zeroxstudios.bqenergyexpansion.tasks;
 
 import betterquesting.api.questing.IQuest;
