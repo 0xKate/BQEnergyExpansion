@@ -6,13 +6,13 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 public class ESSContainer extends Container {
-    private ESSTileEntity tile;
-    private int slotID = 0;
+    private final ESSTileEntity tile;
 
     public ESSContainer(ESSTileEntity tileEnt, EntityPlayer player) {
         this.tile = tileEnt;
 
         // Storage
+        int slotID = 0;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 5; j++) {
                 addSlotToContainer(new Slot(tile, slotID++, 44 + j * 18, 17 + i * 18));

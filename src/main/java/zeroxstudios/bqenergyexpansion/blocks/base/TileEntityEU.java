@@ -3,27 +3,69 @@ package zeroxstudios.bqenergyexpansion.blocks.base;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergySink;
+import ic2.api.info.Info;
+import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
-import ic2.core.ITickCallback;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityEU extends TileEntityBase implements IEnergySink {
 
     public double internalEUStorage = 0;
-    public double internalEUMax = 100000;
-    private int tier = 4;
-    private float guiChargeLevel;
+    public double internalEUMax = 0;
     private boolean connectedToEUNet = false;
-    private boolean init = false;
     private boolean enableWorldTick;
     private boolean loaded = false;
+    private int tier;
 
-    public void setMaxEUStorage(double newValue) {
-        internalEUMax = newValue;
+    /**
+     * Get the maximum amount of energy this sink can hold in its buffer.
+     *
+     * @return Capacity in EU.
+     */
+    public double getCapacity() {
+        return internalEUMax;
+    }
+    /**
+     * Set the maximum amount of energy this sink can hold in its buffer.
+     *
+     * @param newMax Capacity in EU.
+     */
+    public void setCapacity(double newMax) {
+        this.internalEUMax = newMax;
+    }
+
+    /**
+     * Determine the energy stored in the sink's input buffer.
+     *
+     * @return amount in EU, may be above capacity
+     */
+    public double getEnergyStored() {
+        return internalEUStorage;
+    }
+
+    /**
+     * Set the stored energy to the specified amount.
+     *
+     * This is intended for server -> client synchronization, e.g. to display the stored energy in
+     * a GUI through getEnergyStored().
+     *
+     * @param amount
+     */
+    public void setEnergyStored(double amount) {
+        internalEUStorage = amount;
+    }
+
+    /**
+     * Set the IC2 energy tier for this sink.
+     *
+     * @param newTier IC2 Tier.
+     */
+    public void setTier(int newTier) {
+        this.tier = newTier;
     }
 
     /**
@@ -89,15 +131,13 @@ public class TileEntityEU extends TileEntityBase implements IEnergySink {
     @Override
     public final void validate() {
         super.validate();
-        IC2.tickHandler.addSingleTickCallback(this.worldObj, new ITickCallback() {
-            public void tickCallback(World world) {
-                if (!TileEntityEU.this.isInvalid()
-                        && world.blockExists(
-                                TileEntityEU.this.xCoord, TileEntityEU.this.yCoord, TileEntityEU.this.zCoord)) {
-                    TileEntityEU.this.onLoaded();
-                    if (!TileEntityEU.this.isInvalid() && (TileEntityEU.this.enableWorldTick)) {
-                        world.loadedTileEntityList.add(TileEntityEU.this);
-                    }
+        IC2.tickHandler.addSingleTickCallback(this.worldObj, world -> {
+            if (!TileEntityEU.this.isInvalid()
+                    && world.blockExists(
+                            TileEntityEU.this.xCoord, TileEntityEU.this.yCoord, TileEntityEU.this.zCoord)) {
+                TileEntityEU.this.onLoaded();
+                if (!TileEntityEU.this.isInvalid() && (TileEntityEU.this.enableWorldTick)) {
+                    world.loadedTileEntityList.add(TileEntityEU.this);
                 }
             }
         });
@@ -130,47 +170,42 @@ public class TileEntityEU extends TileEntityBase implements IEnergySink {
                 MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
                 this.connectedToEUNet = false;
             }
+            this.worldObj.loadedTileEntityList.remove(this);
             this.loaded = false;
         }
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
-        super.readFromNBT(nbttagcompound);
-        this.internalEUStorage = nbttagcompound.getDouble("energy");
+    public void readFromNBT(NBTTagCompound tags) {
+        super.readFromNBT(tags);
+        this.internalEUStorage = tags.getDouble("energy");
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbttagcompound) {
-        super.writeToNBT(nbttagcompound);
-        nbttagcompound.setDouble("energy", this.internalEUStorage);
+    public void writeToNBT(NBTTagCompound tags) {
+        super.writeToNBT(tags);
+        tags.setDouble("energy", this.internalEUStorage);
     }
 
-    @Override
-    public void updateEntity() {
-        super.updateEntity();
+    /**
+     * Discharge the supplied ItemStack into this sink's energy buffer.
+     *
+     * @param stack ItemStack to discharge (null is ignored)
+     * @param limit Transfer limit, values <= 0 will use the battery's limit
+     * @return true if energy was transferred
+     */
+    public boolean discharge(ItemStack stack, int limit) {
+        if (stack == null || !Info.isIc2Available()) return false;
 
-        if (this.enableWorldTick) {
-            if (this.worldObj.isRemote) {
-                this.updateEntityClient();
-            } else {
-                this.updateEntityServer();
-            }
-        }
-    }
+        double amount = internalEUMax - internalEUStorage;
+        if (amount <= 0) return false;
 
-    protected void updateEntityClient() {}
+        if (limit > 0 && limit < amount) amount = limit;
 
-    protected void updateEntityServer() {
-        if (this.internalEUMax - this.internalEUStorage >= 1.0) {
+        amount = ElectricItem.manager.discharge(stack, amount, tier, limit > 0, true, false);
 
-            // double amount = this.dischargeSlot.discharge((double)this.maxEnergy - this.energy, false);
-            // if (amount > 0.0) {
-            //    this.energy += amount;
-            //    this.markDirty();
-            // }
-        }
+        internalEUStorage += amount;
 
-        this.guiChargeLevel = Math.min(1.0F, (float) this.internalEUStorage / (float) this.internalEUMax);
+        return amount > 0;
     }
 }
