@@ -1,5 +1,17 @@
 // Add any additional repositories for your dependencies here
 
 repositories {
-
+    maven {
+        name 'GTNH Maven'
+        url 'http://jenkins.usrv.eu:8081/nexus/content/groups/public/'
+        allowInsecureProtocol
+    }
+    maven {
+        name 'IC2 Maven'
+        url "http://maven.ic2.player.to/"
+        // This is required for use with ic2 maven if using Gradle 6.0+ (Missing .pom files client fix)
+        metadataSources {
+            artifact()
+        }
+    }
 }
