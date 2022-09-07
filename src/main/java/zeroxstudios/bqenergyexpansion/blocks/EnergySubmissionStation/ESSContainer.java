@@ -6,10 +6,10 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 public class ESSContainer extends Container {
-    private ESSTileEntityEU tile;
+    private ESSTileEntity tile;
     private int slotID = 0;
 
-    public ESSContainer(ESSTileEntityEU tileEnt, EntityPlayer player) {
+    public ESSContainer(ESSTileEntity tileEnt, EntityPlayer player) {
         this.tile = tileEnt;
 
         // Storage

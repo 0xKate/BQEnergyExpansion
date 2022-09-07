@@ -14,18 +14,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
 public class TaskEUCharge implements ITask, IEUTask {
-    /**
-     * Submits raw RF energy to the task and returns any left over
-     *
-     * @param quest
-     * @param owner
-     * @param amount
-     */
-    @Override
-    public int submitEnergy(DBEntry<IQuest> quest, UUID owner, int amount) {
-        return 0;
-    }
-
     @Override
     public String getUnlocalisedName() {
         return null;
@@ -104,4 +92,30 @@ public class TaskEUCharge implements ITask, IEUTask {
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {}
+
+    /**
+     * Submits raw EU energy to the task
+     *
+     * @param quest
+     * @param owner
+     * @param amount
+     * @param voltage
+     */
+    @Override
+    public int submitEnergy(DBEntry<IQuest> quest, UUID owner, double amount, double voltage) {
+        return 0;
+    }
+
+    /**
+     * Checks if the t raw EU energy to the task
+     *
+     * @param quest
+     * @param owner
+     * @param amount
+     * @param voltage
+     */
+    @Override
+    public boolean canSubmitEnergy(DBEntry<IQuest> quest, UUID owner, double amount, double voltage) {
+        return false;
+    }
 }

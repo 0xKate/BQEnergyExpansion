@@ -1,9 +1,16 @@
 package zeroxstudios.bqenergyexpansion.core;
 
+import betterquesting.api.api.ApiReference;
+import betterquesting.api.api.QuestingAPI;
+import betterquesting.api.questing.tasks.ITask;
+import betterquesting.api2.registry.IFactoryData;
+import betterquesting.api2.registry.IRegistry;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import net.minecraft.nbt.NBTTagCompound;
 import zeroxstudios.bqenergyexpansion.blocks.BlockManager;
 import zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation.gui.ESSGuiHandler;
+import zeroxstudios.bqenergyexpansion.tasks.factory.FactoryTaskEUCharge;
 import zeroxstudios.bqenergyexpansion.waila.BQEnergyWailaModule;
 
 public class CommonProxy {
@@ -25,6 +32,11 @@ public class CommonProxy {
 
     // postInit "Handle interaction with other mods, complete your setup based on this."
     public void postInit(FMLPostInitializationEvent event) {
+
+        // Register Task to BetterQuesting
+        IRegistry<IFactoryData<ITask, NBTTagCompound>, ITask> bqTaskRegistry =
+                QuestingAPI.getAPI(ApiReference.TASK_REG);
+        bqTaskRegistry.register(FactoryTaskEUCharge.INSTANCE);
 
         BQEnergyWailaModule.register();
     }

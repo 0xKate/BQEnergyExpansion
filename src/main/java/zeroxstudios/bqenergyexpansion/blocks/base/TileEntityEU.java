@@ -1,4 +1,4 @@
-package zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation;
+package zeroxstudios.bqenergyexpansion.blocks.base;
 
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class ESSTileEntityEU extends ESSTileEntityBase implements IEnergySink {
+public class TileEntityEU extends TileEntityBase implements IEnergySink {
 
     public double internalEUStorage = 0;
     public double internalEUMax = 100000;
@@ -91,14 +91,12 @@ public class ESSTileEntityEU extends ESSTileEntityBase implements IEnergySink {
         super.validate();
         IC2.tickHandler.addSingleTickCallback(this.worldObj, new ITickCallback() {
             public void tickCallback(World world) {
-                if (!ESSTileEntityEU.this.isInvalid()
+                if (!TileEntityEU.this.isInvalid()
                         && world.blockExists(
-                                ESSTileEntityEU.this.xCoord,
-                                ESSTileEntityEU.this.yCoord,
-                                ESSTileEntityEU.this.zCoord)) {
-                    ESSTileEntityEU.this.onLoaded();
-                    if (!ESSTileEntityEU.this.isInvalid() && (ESSTileEntityEU.this.enableWorldTick)) {
-                        world.loadedTileEntityList.add(ESSTileEntityEU.this);
+                                TileEntityEU.this.xCoord, TileEntityEU.this.yCoord, TileEntityEU.this.zCoord)) {
+                    TileEntityEU.this.onLoaded();
+                    if (!TileEntityEU.this.isInvalid() && (TileEntityEU.this.enableWorldTick)) {
+                        world.loadedTileEntityList.add(TileEntityEU.this);
                     }
                 }
             }
@@ -149,7 +147,7 @@ public class ESSTileEntityEU extends ESSTileEntityBase implements IEnergySink {
     }
 
     @Override
-    public final void updateEntity() {
+    public void updateEntity() {
         super.updateEntity();
 
         if (this.enableWorldTick) {

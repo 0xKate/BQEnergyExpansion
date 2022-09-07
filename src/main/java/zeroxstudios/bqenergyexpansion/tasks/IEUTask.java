@@ -7,7 +7,12 @@ import java.util.UUID;
 
 public interface IEUTask extends ITask {
     /**
-     * Submits raw RF energy to the task and returns any left over
+     * Submits EU energy to the task
      */
-    int submitEnergy(DBEntry<IQuest> quest, UUID owner, int amount);
+    int submitEnergy(DBEntry<IQuest> quest, UUID owner, double amount, double voltage);
+
+    /**
+     * Checks if you can submit EU energy to the task
+     */
+    boolean canSubmitEnergy(DBEntry<IQuest> quest, UUID owner, double amount, double voltage);
 }

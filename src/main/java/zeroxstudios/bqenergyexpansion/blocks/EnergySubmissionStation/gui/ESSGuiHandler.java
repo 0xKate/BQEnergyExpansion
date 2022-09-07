@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation.ESSContainer;
-import zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation.ESSTileEntityEU;
+import zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation.ESSTileEntity;
 
 public class ESSGuiHandler implements IGuiHandler {
     /**
@@ -23,10 +23,10 @@ public class ESSGuiHandler implements IGuiHandler {
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         TileEntity tileEnt = world.getTileEntity(x, y, z);
 
-        if (tileEnt instanceof ESSTileEntityEU) {
+        if (tileEnt instanceof ESSTileEntity) {
             if (ID == 0) // Gui ID for storage block, will add later
             {
-                return new ESSContainer((ESSTileEntityEU) tileEnt, player);
+                return new ESSContainer((ESSTileEntity) tileEnt, player);
             }
         }
         return null;
@@ -49,10 +49,10 @@ public class ESSGuiHandler implements IGuiHandler {
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         TileEntity tileEnt = world.getTileEntity(x, y, z);
 
-        if (tileEnt instanceof ESSTileEntityEU) {
+        if (tileEnt instanceof ESSTileEntity) {
             if (ID == 0) // Gui ID for storage block, will add later
             {
-                return new ESSGuiContainer((ESSTileEntityEU) tileEnt, player);
+                return new ESSGuiContainer((ESSTileEntity) tileEnt, player);
             }
         }
         return null;

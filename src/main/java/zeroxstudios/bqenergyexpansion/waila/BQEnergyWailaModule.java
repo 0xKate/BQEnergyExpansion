@@ -14,8 +14,7 @@ public class BQEnergyWailaModule {
     public static void register() {
         // XXX : We register the Energy interface first
         try {
-            TileEnergyStation =
-                    Class.forName("zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation.ESSTileEntityEU");
+            TileEnergyStation = Class.forName("zeroxstudios.bqenergyexpansion.blocks.base.TileEntityEU");
             TileEnergyStation_storage = TileEnergyStation.getDeclaredField("internalEUStorage");
             TileEnergyStation_maxStorage = TileEnergyStation.getDeclaredField("internalEUMax");
 

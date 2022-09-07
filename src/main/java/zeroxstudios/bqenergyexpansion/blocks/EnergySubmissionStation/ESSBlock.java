@@ -30,7 +30,7 @@ public class ESSBlock extends BlockContainer {
         if (world.isRemote) return true;
 
         TileEntity tile = world.getTileEntity(x, y, z);
-        if (tile instanceof ESSTileEntityEU) {
+        if (tile instanceof ESSTileEntity) {
             player.openGui(BQEnergyExpansion.instance, 0, world, x, y, z);
             return true;
         }
@@ -42,8 +42,8 @@ public class ESSBlock extends BlockContainer {
         if (world.isRemote) return;
         ArrayList<ItemStack> itemsToDrop = new ArrayList<>();
         Object tile = world.getTileEntity(x, y, z);
-        if (tile instanceof ESSTileEntityEU) {
-            ESSTileEntityEU ess = (ESSTileEntityEU) tile;
+        if (tile instanceof ESSTileEntity) {
+            ESSTileEntity ess = (ESSTileEntity) tile;
             for (int i = 0; i < ess.getSizeInventory(); i++) {
                 ItemStack stack = ess.getStackInSlot(i);
                 if (stack != null) itemsToDrop.add(stack.copy());
@@ -60,6 +60,6 @@ public class ESSBlock extends BlockContainer {
 
     @Override
     public TileEntity createNewTileEntity(World w, int p_149915_2_) {
-        return new ESSTileEntityEU();
+        return new ESSTileEntity();
     }
 }
