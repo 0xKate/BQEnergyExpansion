@@ -48,9 +48,16 @@ public class TaskEUCharge extends TaskProgressableBase<Double> implements ITask,
         return null;
     }
 
+    /**
+     * Returns the amount of energy needed to complete the task
+     */
+    public double getRequiredEnergy() {
+        return this.requiredEnergy;
+    }
+
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tags) {
-        tags.setDouble("requiredEnergy", requiredEnergy);
+        tags.setDouble("requiredEnergy", getRequiredEnergy());
         return tags;
     }
 
@@ -67,10 +74,17 @@ public class TaskEUCharge extends TaskProgressableBase<Double> implements ITask,
 
     @Override
     public void detect(ParticipantInfo pInfo, DBEntry<IQuest> quest) {
-        final List<Tuple2<UUID, Double>> progress = getBulkProgress(pInfo.ALL_UUIDS);
+        final List<Tuple2<UUID, Double>> bulkProgress = getBulkProgress(pInfo.ALL_UUIDS);
 
-        progress.forEach((value) -> {
-            if (value.getSecond() >= requiredEnergy) setComplete(value.getFirst());
+        bulkProgress.forEach((value) -> {
+            Double progress = value.getSecond();
+            UUID player = value.getFirst();
+            if (!this.isComplete(player)) {
+                if (progress > getRequiredEnergy()) {
+                    setUserProgress(player, getRequiredEnergy());
+                    this.setComplete(player);
+                }
+            }
         });
 
         pInfo.markDirtyParty(Collections.singletonList(quest.getID()));
@@ -86,23 +100,17 @@ public class TaskEUCharge extends TaskProgressableBase<Double> implements ITask,
         nbt.setDouble("value", progress);
     }
 
-    /**
-     * Submits raw EU energy to the task
-     *
-     * @param quest
-     * @param owner
-     * @param amount
-     * @param voltage
-     */
     @Override
     public void submitEnergy(DBEntry<IQuest> quest, UUID owner, double amount, double voltage) {
         Double progress = getUsersProgress(owner);
-        progress += amount;
 
-        if (progress < getRequiredEnergy()) {
-            setUserProgress(owner, progress);
-        } else {
-            this.setComplete(owner);
+        if (!this.isComplete(owner)) {
+            if (progress + amount < getRequiredEnergy()) {
+                setUserProgress(owner, progress + amount);
+            } else {
+                setUserProgress(owner, getRequiredEnergy());
+                this.setComplete(owner);
+            }
         }
     }
 
@@ -116,13 +124,6 @@ public class TaskEUCharge extends TaskProgressableBase<Double> implements ITask,
      */
     @Override
     public boolean canSubmitEnergy(DBEntry<IQuest> quest, UUID owner, double amount, double voltage) {
-        return getUsersProgress(owner) < requiredEnergy;
-    }
-
-    /**
-     * Returns the amount of energy needed to complete the task
-     */
-    public double getRequiredEnergy() {
-        return this.requiredEnergy;
+        return getUsersProgress(owner) < getRequiredEnergy();
     }
 }

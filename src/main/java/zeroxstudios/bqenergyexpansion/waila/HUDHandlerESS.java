@@ -4,6 +4,11 @@ import static mcp.mobius.waila.api.SpecialChars.ALIGNRIGHT;
 import static mcp.mobius.waila.api.SpecialChars.TAB;
 import static zeroxstudios.bqenergyexpansion.blocks.base.TileEntityQuest.getPlayerByUUID;
 
+import betterquesting.api.api.ApiReference;
+import betterquesting.api.api.QuestingAPI;
+import betterquesting.api.properties.NativeProps;
+import betterquesting.api.questing.IQuest;
+import betterquesting.api.questing.tasks.ITask;
 import java.util.List;
 import java.util.UUID;
 import mcp.mobius.waila.api.IWailaConfigHandler;
@@ -40,15 +45,14 @@ public class HUDHandlerESS implements IWailaDataProvider {
             double storage = accessor.getNBTData().getDouble("internalEUStorage");
             double maxStorage = accessor.getNBTData().getDouble("internalEUMax");
             String owner = accessor.getNBTData().getString("owner");
-            // int questID = accessor.getNBTData().getInteger("questID");
-            // int taskID = accessor.getNBTData().getInteger("taskID");
-            // IQuest q;
-            // ITask t;
+            int questID = accessor.getNBTData().getInteger("questID");
+            int taskID = accessor.getNBTData().getInteger("taskID");
+            IQuest q;
+            ITask t;
 
             // Storage
-            String EUStorageLocalized = LangUtil.translateG("bqenergy.waila.eu.storage");
+            String EUStorageLocalized = LangUtil.translateG("bqenergy.waila.progress");
             if (ConfigHandler.instance().getConfig(Tags.MODID + ".shown")) {
-                // if (maxStorage > 0)
                 currenttip.add(String.format(
                         "%s:%s\u00a7f%d\u00a7r / \u00a7f%d\u00a7r EU",
                         EUStorageLocalized, TAB + ALIGNRIGHT, Math.round(Math.min(storage, maxStorage)), (long)
@@ -61,7 +65,6 @@ public class HUDHandlerESS implements IWailaDataProvider {
                 currenttip.add(String.format("%s:%s\u00a7f%s\u00a7r", ownerLabel, TAB, owner));
             }
 
-            /*
             if (questID >= 0 && taskID >= 0) {
                 // Quest
                 q = QuestingAPI.getAPI(ApiReference.QUEST_DB).getValue(questID);
@@ -79,7 +82,6 @@ public class HUDHandlerESS implements IWailaDataProvider {
                     currenttip.add(String.format("%s:%s\u00a7f%s\u00a7r", taskLabel, TAB, taskName));
                 }
             }
-             */
 
         } catch (Exception e) {
             currenttip = WailaExceptionHandler.handleErr(
@@ -103,15 +105,15 @@ public class HUDHandlerESS implements IWailaDataProvider {
             double storage = -1;
             double maxStorage = -1;
             UUID owner = null;
-            // int questID = -1;
-            // int taskID = -1;
+            int questID = -1;
+            int taskID = -1;
 
             if (BQEnergyWailaModule.RefESSTileEntity.isInstance(te)) {
                 storage = BQEnergyWailaModule.RefESSTileEntity_storage.getDouble(te);
                 maxStorage = BQEnergyWailaModule.RefESSTileEntity_maxStorage.getDouble(te);
                 owner = (UUID) BQEnergyWailaModule.RefESSTileEntity_owner.get(te);
-                // questID = BQEnergyWailaModule.RefTileEntityQuest_questID.getInt(te);
-                // taskID = BQEnergyWailaModule.RefTileEntityQuest_questID.getInt(te);
+                questID = BQEnergyWailaModule.RefESSTileEntity_questID.getInt(te);
+                taskID = BQEnergyWailaModule.RefESSTileEntity_taskID.getInt(te);
 
                 tag.setDouble("internalEUStorage", storage);
                 tag.setDouble("internalEUMax", maxStorage);
@@ -123,8 +125,8 @@ public class HUDHandlerESS implements IWailaDataProvider {
                     tag.setString("owner", "N/A");
                 }
 
-                // tag.setInteger("questID", questID);
-                // tag.setInteger("taskID", taskID);
+                tag.setInteger("questID", questID);
+                tag.setInteger("taskID", taskID);
             }
 
         } catch (Exception e) {

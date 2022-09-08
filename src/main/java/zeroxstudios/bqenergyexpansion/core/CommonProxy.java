@@ -10,7 +10,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import net.minecraft.nbt.NBTTagCompound;
 import zeroxstudios.bqenergyexpansion.blocks.BlockManager;
 import zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation.gui.ESSGuiHandler;
-import zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation.gui.ESSPacketHandler;
+import zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation.network.ESSPacketHandler;
 import zeroxstudios.bqenergyexpansion.tasks.factory.FactoryTaskEUCharge;
 import zeroxstudios.bqenergyexpansion.waila.BQEnergyWailaModule;
 

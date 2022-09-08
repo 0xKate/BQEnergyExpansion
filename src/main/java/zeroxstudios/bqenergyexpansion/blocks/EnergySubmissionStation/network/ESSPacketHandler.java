@@ -1,7 +1,7 @@
 /**
  * Portions of this file have been copied from BetterQuesting and is copyrighted by Funwayguy under the terms of the MIT license.
  */
-package zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation.gui;
+package zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation.network;
 
 import betterquesting.api.api.QuestingAPI;
 import betterquesting.api.network.QuestingPacket;

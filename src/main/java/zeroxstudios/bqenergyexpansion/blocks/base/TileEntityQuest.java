@@ -75,7 +75,7 @@ public class TileEntityQuest extends TileEntityEU {
                     ? null
                     : (QuestCache) player.getExtendedProperties(QuestCache.LOC_QUEST_CACHE.toString());
 
-            if (q != null && t != null) {
+            if (q != null && t != null && owner != null) {
                 if (t.isComplete(owner)) {
                     reset();
                     needsUpdate = true;
@@ -101,7 +101,7 @@ public class TileEntityQuest extends TileEntityEU {
                 }
             }
 
-            if (t != null && t.isComplete(owner)) {
+            if (t != null && owner != null && t.isComplete(owner)) {
                 reset();
                 MinecraftServer.getServer()
                         .getConfigurationManager()
@@ -129,7 +129,7 @@ public class TileEntityQuest extends TileEntityEU {
     }
 
     public void setupTask(UUID owner, IQuest quest, ITask task) {
-        BQEnergyExpansion.logToChat(String.format("Setting up Task - {[%s], [%s], [%s]}", owner, quest, task));
+        // BQEnergyExpansion.logToChat(String.format("Setting up Task - {[%s], [%s], [%s]}", owner, quest, task));
         if (owner == null || quest == null || task == null) {
             reset();
             return;
@@ -139,30 +139,27 @@ public class TileEntityQuest extends TileEntityEU {
         this.qCached = new DBEntry<>(questID, quest);
         this.taskID = quest.getTasks().getID(task);
 
-        BQEnergyExpansion.logToChat(
-                String.format("Setting up Task - {[%s], [%s], [%s]}", this.questID, this.qCached, this.taskID));
-
-        if (task instanceof TaskEUCharge) {
-            double req = ((TaskEUCharge) task).getRequiredEnergy();
-            BQEnergyExpansion.logToChat(String.format("Setting Capacity to %s", req));
-            this.setCapacity(req);
-            this.setEnergyStored(0);
-            this.setSinkTier(4);
-            this.markDirty();
-
-            MinecraftServer.getServer()
-                    .getConfigurationManager()
-                    .sendToAllNearExcept(
-                            null, xCoord, yCoord, zCoord, 128, worldObj.provider.dimensionId, getDescriptionPacket());
-        }
-
         if (this.questID < 0 || this.taskID < 0) {
             reset();
             return;
         }
 
-        this.owner = owner;
-        this.markDirty();
+        BQEnergyExpansion.logToChat(
+                String.format("Setting up Task - {[%s], [%s], [%s]}", this.questID, this.qCached, this.taskID));
+
+        if (task instanceof TaskEUCharge) {
+            double req = ((TaskEUCharge) task).getRequiredEnergy();
+            // BQEnergyExpansion.logToChat(String.format("Setting Capacity to %s", req));
+            this.setCapacity(req);
+            this.setEnergyStored(0);
+            this.setSinkTier(4);
+            this.setOwner(owner);
+            this.markDirty();
+        }
+    }
+
+    private void setOwner(UUID newOwner) {
+        this.owner = newOwner;
     }
 
     public boolean isSetup() {
@@ -240,7 +237,8 @@ public class TileEntityQuest extends TileEntityEU {
     }
 
     public double injectEnergy(ForgeDirection directionFrom, double amount, double voltage) {
-        super.injectEnergy(directionFrom, amount, voltage);
+        double remainder = super.injectEnergy(directionFrom, amount, voltage);
+        double total = amount + remainder;
 
         if (!isSetup()
                 || amount <= 0
@@ -250,11 +248,11 @@ public class TileEntityQuest extends TileEntityEU {
         IEUTask task = getEUTask();
 
         if (task != null) {
-            if (task.canSubmitEnergy(quest, owner, amount, voltage)) {
-                task.submitEnergy(quest, owner, amount, voltage);
+            if (task.canSubmitEnergy(quest, owner, total, voltage)) {
+                task.submitEnergy(quest, owner, total, voltage);
             }
 
-            if (task.isComplete(owner)) {
+            if (task.isComplete(owner) && super.getDemandedEnergy() <= 0.0) {
                 needsUpdate = true;
                 reset();
                 MinecraftServer.getServer()
@@ -271,8 +269,7 @@ public class TileEntityQuest extends TileEntityEU {
                 needsUpdate = true; // remainder != energy;
             }
         }
-
-        return 0;
+        return remainder;
     }
     // </editor-fold>
 }

@@ -1,6 +1,5 @@
 package zeroxstudios.bqenergyexpansion.blocks.base;
 
-import ic2.api.energy.event.EnergyTileEvent;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergySink;
@@ -16,7 +15,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class TileEntityEU extends TileEntityBase implements IEnergySink {
 
     public double internalEUStorage = 0;
-    public double internalEUMax = 100000;
+    public double internalEUMax = 0;
     private boolean connectedToEUNet = false;
     private boolean enableWorldTick;
     private boolean loaded = false;
@@ -37,8 +36,6 @@ public class TileEntityEU extends TileEntityBase implements IEnergySink {
      */
     public void setCapacity(double newMax) {
         this.internalEUMax = newMax;
-        MinecraftForge.EVENT_BUS.post(new EnergyTileEvent(this));
-        this.markDirty();
     }
 
     /**
@@ -109,10 +106,14 @@ public class TileEntityEU extends TileEntityBase implements IEnergySink {
      */
     @Override
     public double injectEnergy(ForgeDirection directionFrom, double amount, double voltage) {
-        internalEUStorage += amount;
-
-        // Per Ic2 usage doc, should always return zero, and overfill the buffer.
-        return 0;
+        double total = internalEUStorage + amount;
+        if (total > internalEUMax) {
+            internalEUStorage = internalEUMax;
+            return total - internalEUMax;
+        } else {
+            internalEUStorage += amount;
+            return 0.0;
+        }
     }
 
     /**

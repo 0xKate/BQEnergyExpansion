@@ -7,16 +7,12 @@ import zeroxstudios.bqenergyexpansion.core.BQEnergyExpansion;
 import zeroxstudios.bqenergyexpansion.core.Tags;
 
 public class BQEnergyWailaModule {
-    // public static Class RefParent = null;
-
     public static Class RefESSTileEntity = null;
     public static Field RefESSTileEntity_storage = null;
     public static Field RefESSTileEntity_maxStorage = null;
-
-    // public static Class RefTileEntityQuest = null;
     public static Field RefESSTileEntity_owner = null;
-    // public static Field RefTileEntityQuest_questID = null;
-    // public static Field RefTileEntityQuest_taskID = null;
+    public static Field RefESSTileEntity_questID = null;
+    public static Field RefESSTileEntity_taskID = null;
 
     public static void register() {
         try {
@@ -29,11 +25,9 @@ public class BQEnergyWailaModule {
                     RefESSTileEntity.getSuperclass().getSuperclass().getDeclaredField("internalEUStorage");
             RefESSTileEntity_maxStorage =
                     RefESSTileEntity.getSuperclass().getSuperclass().getDeclaredField("internalEUMax");
-
-            // RefTileEntityQuest = Class.forName("zeroxstudios.bqenergyexpansion.blocks.base.TileEntityQuest");
             RefESSTileEntity_owner = RefESSTileEntity.getSuperclass().getDeclaredField("owner");
-            // RefTileEntityQuest_questID = RefTileEntityEU.getDeclaredField("questID");
-            // RefTileEntityQuest_taskID = RefTileEntityEU.getDeclaredField("taskID");
+            RefESSTileEntity_questID = RefESSTileEntity.getSuperclass().getDeclaredField("questID");
+            RefESSTileEntity_taskID = RefESSTileEntity.getSuperclass().getDeclaredField("taskID");
 
             ModuleRegistrar.instance().registerBodyProvider(new HUDHandlerESS(), RefESSTileEntity);
             ModuleRegistrar.instance().registerNBTProvider(new HUDHandlerESS(), RefESSTileEntity);

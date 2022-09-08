@@ -36,6 +36,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector4f;
 import zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation.ESSContainer;
 import zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation.ESSTileEntity;
+import zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation.network.ESSPacketHandler;
 import zeroxstudios.bqenergyexpansion.tasks.IEUTask;
 
 @SuppressWarnings("deprecation")

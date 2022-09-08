@@ -4,6 +4,8 @@ tile.bqenergyexpansion.energy_submission_station.storage=Energy Submission Stati
 bqenergy.tasks.eu.charge=EU Charge Task
 bqenergy.gui.ess.title=Energy Submission Station
 
+bqenergy.waila.progress=Progress
+bqenergy.waila.storage=Storage
 bqenergy.waila.energy=Energy
 bqenergy.waila.quest=Quest
 bqenergy.waila.task=Task
