@@ -7,6 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import zeroxstudios.bqenergyexpansion.core.Tags;
 import zeroxstudios.bqenergyexpansion.tasks.TaskEUCharge;
 
+@SuppressWarnings("deprecation")
 public class FactoryTaskEUCharge implements IFactoryData<ITask, NBTTagCompound> {
 
     public static final FactoryTaskEUCharge INSTANCE = new FactoryTaskEUCharge();

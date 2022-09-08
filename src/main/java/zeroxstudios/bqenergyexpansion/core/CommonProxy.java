@@ -20,9 +20,8 @@ public class CommonProxy {
     // etc., and register them with the GameRegistry."
     public void preInit(FMLPreInitializationEvent event) {
         Config.syncronizeConfiguration(event.getSuggestedConfigurationFile());
-        BQEnergyExpansion.info(Config.greeting);
-        BQEnergyExpansion.info(
-                "I am " + Tags.MODNAME + " at version " + Tags.VERSION + " and group name " + Tags.GROUPNAME);
+
+        BQEnergyExpansion.info("Hello from " + Tags.MODNAME + " v" + Tags.VERSION);
 
         BlockManager.init();
         NetworkRegistry.INSTANCE.registerGuiHandler(BQEnergyExpansion.instance, new ESSGuiHandler());
@@ -33,6 +32,8 @@ public class CommonProxy {
     public void init(FMLInitializationEvent event) {}
 
     // postInit "Handle interaction with other mods, complete your setup based on this."
+
+    @SuppressWarnings("deprecation")
     public void postInit(FMLPostInitializationEvent event) {
 
         // Register Task to BetterQuesting

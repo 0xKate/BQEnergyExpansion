@@ -18,8 +18,6 @@ public class BQEnergyWailaModule {
         try {
             BQEnergyExpansion.info("Loading waila integration...");
 
-            // RefParent = Class.forName("zeroxstudios.bqenergyexpansion.blocks.EnergySubmissionStation.ESSTileEntity");
-
             RefESSTileEntity = ESSTileEntity.class;
             RefESSTileEntity_storage =
                     RefESSTileEntity.getSuperclass().getSuperclass().getDeclaredField("internalEUStorage");

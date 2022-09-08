@@ -24,6 +24,10 @@ public class ESSBlock extends BlockContainer {
         this.setBlockTextureName(Tags.MODID + ":" + name);
     }
 
+    public String getName() {
+        return name;
+    }
+
     @Override
     public boolean onBlockActivated(
             World world, int x, int y, int z, EntityPlayer player, int side, float lx, float ly, float lz) {

@@ -79,11 +79,9 @@ public class TaskEUCharge extends TaskProgressableBase<Double> implements ITask,
         bulkProgress.forEach((value) -> {
             Double progress = value.getSecond();
             UUID player = value.getFirst();
-            if (!this.isComplete(player)) {
-                if (progress > getRequiredEnergy()) {
-                    setUserProgress(player, getRequiredEnergy());
-                    this.setComplete(player);
-                }
+            if (progress > getRequiredEnergy()) {
+                setUserProgress(player, getRequiredEnergy());
+                this.setComplete(player);
             }
         });
 
@@ -104,13 +102,11 @@ public class TaskEUCharge extends TaskProgressableBase<Double> implements ITask,
     public void submitEnergy(DBEntry<IQuest> quest, UUID owner, double amount, double voltage) {
         Double progress = getUsersProgress(owner);
 
-        if (!this.isComplete(owner)) {
-            if (progress + amount < getRequiredEnergy()) {
-                setUserProgress(owner, progress + amount);
-            } else {
-                setUserProgress(owner, getRequiredEnergy());
-                this.setComplete(owner);
-            }
+        if (progress + amount < getRequiredEnergy()) {
+            setUserProgress(owner, progress + amount);
+        } else {
+            setUserProgress(owner, getRequiredEnergy());
+            this.setComplete(owner);
         }
     }
 

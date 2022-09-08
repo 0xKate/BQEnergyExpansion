@@ -20,7 +20,6 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.util.ForgeDirection;
-import zeroxstudios.bqenergyexpansion.core.BQEnergyExpansion;
 import zeroxstudios.bqenergyexpansion.tasks.IEUTask;
 import zeroxstudios.bqenergyexpansion.tasks.TaskEUCharge;
 
@@ -129,7 +128,6 @@ public class TileEntityQuest extends TileEntityEU {
     }
 
     public void setupTask(UUID owner, IQuest quest, ITask task) {
-        // BQEnergyExpansion.logToChat(String.format("Setting up Task - {[%s], [%s], [%s]}", owner, quest, task));
         if (owner == null || quest == null || task == null) {
             reset();
             return;
@@ -144,12 +142,8 @@ public class TileEntityQuest extends TileEntityEU {
             return;
         }
 
-        BQEnergyExpansion.logToChat(
-                String.format("Setting up Task - {[%s], [%s], [%s]}", this.questID, this.qCached, this.taskID));
-
         if (task instanceof TaskEUCharge) {
             double req = ((TaskEUCharge) task).getRequiredEnergy();
-            // BQEnergyExpansion.logToChat(String.format("Setting Capacity to %s", req));
             this.setCapacity(req);
             this.setEnergyStored(0);
             this.setSinkTier(4);
@@ -250,6 +244,7 @@ public class TileEntityQuest extends TileEntityEU {
         if (task != null) {
             if (task.canSubmitEnergy(quest, owner, total, voltage)) {
                 task.submitEnergy(quest, owner, total, voltage);
+                needsUpdate = true;
             }
 
             if (task.isComplete(owner) && super.getDemandedEnergy() <= 0.0) {
@@ -265,11 +260,8 @@ public class TileEntityQuest extends TileEntityEU {
                                 128,
                                 worldObj.provider.dimensionId,
                                 getDescriptionPacket());
-            } else {
-                needsUpdate = true; // remainder != energy;
             }
-        }
+        } // </editor-fold>
         return remainder;
     }
-    // </editor-fold>
 }
