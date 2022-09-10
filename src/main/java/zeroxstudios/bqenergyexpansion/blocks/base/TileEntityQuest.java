@@ -25,7 +25,6 @@ import zeroxstudios.bqenergyexpansion.tasks.TaskEUCharge;
 
 public class TileEntityQuest extends TileEntityEU {
     // <editor-fold desc="Quest Aware Block Methods">
-    private boolean needsUpdate = false;
     public UUID owner = null;
     public int questID = -1;
     public int taskID = -1;
@@ -55,6 +54,28 @@ public class TileEntityQuest extends TileEntityEU {
         return t instanceof IEUTask ? (IEUTask) t : null;
     }
 
+    public void sendReset() {
+        reset();
+        MinecraftServer server = MinecraftServer.getServer();
+        if (server != null) {
+            server.getConfigurationManager()
+                    .sendToAllNearExcept(
+                            null, xCoord, yCoord, zCoord, 128, worldObj.provider.dimensionId, getDescriptionPacket());
+        }
+    }
+
+    public void syncQuest() {
+        if (!isSetup()) return;
+
+        EntityPlayerMP player = getPlayerByUUID(owner);
+        if (player != null) {
+            QuestCache qc = (QuestCache) player.getExtendedProperties(QuestCache.LOC_QUEST_CACHE.toString());
+            if (qc != null && questID > -1) {
+                qc.markQuestDirty(questID); // Let the cache take care of syncing
+            }
+        }
+    }
+
     @Override
     public void updateEntity() {
         super.updateEntity();
@@ -68,50 +89,17 @@ public class TileEntityQuest extends TileEntityEU {
             if (wtt % 20 == 0) qCached = null; // Reset and lookup quest again once every second
             DBEntry<IQuest> q = getQuest();
             IEUTask t = getEUTask();
-            MinecraftServer server = MinecraftServer.getServer();
-            EntityPlayerMP player = getPlayerByUUID(owner);
-            QuestCache qc = player == null
-                    ? null
-                    : (QuestCache) player.getExtendedProperties(QuestCache.LOC_QUEST_CACHE.toString());
 
             if (q != null && t != null && owner != null) {
                 if (t.isComplete(owner)) {
-                    reset();
-                    needsUpdate = true;
-                    if (server != null) {
-                        server.getConfigurationManager()
-                                .sendToAllNearExcept(
-                                        null,
-                                        xCoord,
-                                        yCoord,
-                                        zCoord,
-                                        128,
-                                        worldObj.provider.dimensionId,
-                                        getDescriptionPacket());
-                    }
-                }
-            }
-
-            if (needsUpdate) {
-                needsUpdate = false;
-
-                if (q != null && qc != null) {
-                    qc.markQuestDirty(questID); // Let the cache take care of syncing
+                    syncQuest();
+                    sendReset();
                 }
             }
 
             if (t != null && owner != null && t.isComplete(owner)) {
-                reset();
-                MinecraftServer.getServer()
-                        .getConfigurationManager()
-                        .sendToAllNearExcept(
-                                null,
-                                xCoord,
-                                yCoord,
-                                zCoord,
-                                128,
-                                worldObj.provider.dimensionId,
-                                getDescriptionPacket());
+                syncQuest();
+                sendReset();
             }
         }
     }
@@ -231,9 +219,6 @@ public class TileEntityQuest extends TileEntityEU {
     }
 
     public double injectEnergy(ForgeDirection directionFrom, double amount, double voltage) {
-        double remainder = super.injectEnergy(directionFrom, amount, voltage);
-        double total = amount + remainder;
-
         if (!isSetup()
                 || amount <= 0
                 || QuestingAPI.getAPI(ApiReference.SETTINGS).getProperty(NativeProps.EDIT_MODE)) return 0;
@@ -241,25 +226,17 @@ public class TileEntityQuest extends TileEntityEU {
         DBEntry<IQuest> quest = getQuest();
         IEUTask task = getEUTask();
 
+        double remainder = 0.0;
         if (task != null) {
-            if (task.canSubmitEnergy(quest, owner, total, voltage)) {
-                task.submitEnergy(quest, owner, total, voltage);
-                needsUpdate = true;
+
+            if (task.canSubmitEnergy(quest, owner, amount, voltage)) {
+                task.submitEnergy(quest, owner, amount, voltage);
+                remainder = super.injectEnergy(directionFrom, amount, voltage);
             }
 
             if (task.isComplete(owner) && super.getDemandedEnergy() <= 0.0) {
-                needsUpdate = true;
-                reset();
-                MinecraftServer.getServer()
-                        .getConfigurationManager()
-                        .sendToAllNearExcept(
-                                null,
-                                xCoord,
-                                yCoord,
-                                zCoord,
-                                128,
-                                worldObj.provider.dimensionId,
-                                getDescriptionPacket());
+                if (worldObj.isRemote) syncQuest();
+                sendReset();
             }
         } // </editor-fold>
         return remainder;

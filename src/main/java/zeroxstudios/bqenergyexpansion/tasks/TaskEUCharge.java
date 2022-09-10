@@ -79,7 +79,7 @@ public class TaskEUCharge extends TaskProgressableBase<Double> implements ITask,
         bulkProgress.forEach((value) -> {
             Double progress = value.getSecond();
             UUID player = value.getFirst();
-            if (progress > getRequiredEnergy()) {
+            if (progress >= getRequiredEnergy()) {
                 setUserProgress(player, getRequiredEnergy());
                 this.setComplete(player);
             }
