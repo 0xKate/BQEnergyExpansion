@@ -22,7 +22,7 @@ public class ESSBlock extends BlockContainer {
     public static final String name = "energy_submission_station";
     private final Random rng = new Random();
     private IIcon topIcon;
-    private final IIcon[] sideIcons = new IIcon[15];
+    private IIcon sideIcon;
     private int currentIcon = 0;
 
     public boolean setIcon(int n) {
@@ -35,7 +35,7 @@ public class ESSBlock extends BlockContainer {
         super(Material.iron);
         this.setHardness(1);
         this.setBlockName(Tags.MODID + "." + name);
-        this.setBlockTextureName(Tags.MODID + ":" + "ess");
+        this.setBlockTextureName(Tags.MODID + ":" + "energy_submission_station");
     }
 
     public String getName() {
@@ -86,27 +86,13 @@ public class ESSBlock extends BlockContainer {
         if (side == 0 || side == 1) {
             return topIcon;
         } else {
-            return sideIcons[currentIcon];
+            return sideIcon;
         }
     }
 
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister iconRegistry) {
-        this.sideIcons[0] = iconRegistry.registerIcon(this.getTextureName() + "_side_0");
-        this.sideIcons[1] = iconRegistry.registerIcon(this.getTextureName() + "_side_1");
-        this.sideIcons[2] = iconRegistry.registerIcon(this.getTextureName() + "_side_2");
-        this.sideIcons[3] = iconRegistry.registerIcon(this.getTextureName() + "_side_3");
-        this.sideIcons[4] = iconRegistry.registerIcon(this.getTextureName() + "_side_4");
-        this.sideIcons[5] = iconRegistry.registerIcon(this.getTextureName() + "_side_5");
-        this.sideIcons[6] = iconRegistry.registerIcon(this.getTextureName() + "_side_6");
-        this.sideIcons[7] = iconRegistry.registerIcon(this.getTextureName() + "_side_7");
-        this.sideIcons[8] = iconRegistry.registerIcon(this.getTextureName() + "_side_8");
-        this.sideIcons[9] = iconRegistry.registerIcon(this.getTextureName() + "_side_9");
-        this.sideIcons[10] = iconRegistry.registerIcon(this.getTextureName() + "_side_10");
-        this.sideIcons[11] = iconRegistry.registerIcon(this.getTextureName() + "_side_11");
-        this.sideIcons[12] = iconRegistry.registerIcon(this.getTextureName() + "_side_12");
-        this.sideIcons[13] = iconRegistry.registerIcon(this.getTextureName() + "_side_13");
-        this.sideIcons[14] = iconRegistry.registerIcon(this.getTextureName() + "_side_14");
+        this.sideIcon = iconRegistry.registerIcon(this.getTextureName() + "_side");
         this.topIcon = iconRegistry.registerIcon(this.getTextureName() + "_top");
     }
 }
