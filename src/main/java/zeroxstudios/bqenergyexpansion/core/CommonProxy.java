@@ -5,6 +5,7 @@ import betterquesting.api.api.QuestingAPI;
 import betterquesting.api.questing.tasks.ITask;
 import betterquesting.api2.registry.IFactoryData;
 import betterquesting.api2.registry.IRegistry;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import net.minecraft.nbt.NBTTagCompound;
@@ -41,7 +42,9 @@ public class CommonProxy {
                 QuestingAPI.getAPI(ApiReference.TASK_REG);
         bqTaskRegistry.register(FactoryTaskEUCharge.INSTANCE);
 
-        BQEnergyWailaModule.register();
+        if (Loader.isModLoaded("Waila")) {
+            BQEnergyWailaModule.register();
+        }
     }
 
     public void serverAboutToStart(FMLServerAboutToStartEvent event) {}

@@ -9,10 +9,15 @@ import net.minecraft.util.ChatComponentText;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = Tags.MODID, version = Tags.VERSION, name = Tags.MODNAME, acceptedMinecraftVersions = "[1.7.10]")
+@Mod(
+        modid = Tags.MODID,
+        version = Tags.VERSION,
+        name = Tags.MODNAME,
+        acceptedMinecraftVersions = "[1.7.10]",
+        useMetadata = true)
 public class BQEnergyExpansion {
 
-    private static Logger LOG = LogManager.getLogger(Tags.MODID);
+    private static final Logger LOG = LogManager.getLogger(Tags.MODID);
 
     @Instance(Tags.MODID)
     public static BQEnergyExpansion instance;
