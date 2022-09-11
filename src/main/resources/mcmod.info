@@ -13,7 +13,7 @@
 		"logoFile": "",
 		"screenshots": [],
 		"parent": "",
-		"requiredMods": [],
+		"requiredMods": ["betterquesting@[3.0.362,)", "bq_standard@[3.0.193,)", "IC2@[2.2.828,)"],
 		"dependencies": [],
 		"dependants": [],
 		"useDependencyInformation": true

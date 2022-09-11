@@ -173,7 +173,6 @@ public class TileEntityEU extends TileEntityBase implements IEnergySink {
                 MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
                 this.connectedToEUNet = false;
             }
-            this.worldObj.loadedTileEntityList.remove(this);
             this.loaded = false;
         }
     }
