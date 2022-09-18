@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -36,6 +37,7 @@ public class ESSBlock extends BlockContainer {
         this.setHardness(1);
         this.setBlockName(Tags.MODID + "." + name);
         this.setBlockTextureName(Tags.MODID + ":" + "energy_submission_station");
+        this.setCreativeTab(CreativeTabs.tabBlock);
     }
 
     public String getName() {

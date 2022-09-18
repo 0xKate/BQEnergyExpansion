@@ -20,8 +20,6 @@ public class CommonProxy {
     // preInit "Run before anything else. Read your config, create blocks, items,
     // etc., and register them with the GameRegistry."
     public void preInit(FMLPreInitializationEvent event) {
-        Config.syncronizeConfiguration(event.getSuggestedConfigurationFile());
-
         BQEnergyExpansion.info("Hello from " + Tags.MODNAME + " v" + Tags.VERSION);
 
         BlockManager.init();
