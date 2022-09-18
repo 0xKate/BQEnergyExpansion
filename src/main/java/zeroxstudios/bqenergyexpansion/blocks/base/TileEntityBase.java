@@ -11,7 +11,7 @@ import zeroxstudios.bqenergyexpansion.core.BQEnergyExpansion;
 
 public class TileEntityBase extends TileEntity implements IInventory {
 
-    private ItemStack[] internalStorage = new ItemStack[1];
+    private ItemStack[] internalStorage = new ItemStack[2];
 
     /**
      * Returns the number of slots in the inventory.
