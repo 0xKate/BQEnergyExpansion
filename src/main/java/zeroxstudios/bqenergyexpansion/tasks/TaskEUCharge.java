@@ -99,7 +99,7 @@ public class TaskEUCharge extends TaskProgressableBase<Double> implements ITask,
     }
 
     @Override
-    public void submitEnergy(DBEntry<IQuest> quest, UUID owner, double amount, double voltage) {
+    public void submitEnergy(ParticipantInfo pInfo, DBEntry<IQuest> quest, UUID owner, double amount, double voltage) {
         Double progress = getUsersProgress(owner);
 
         if (progress + amount < getRequiredEnergy()) {
@@ -108,6 +108,8 @@ public class TaskEUCharge extends TaskProgressableBase<Double> implements ITask,
             setUserProgress(owner, getRequiredEnergy());
             this.setComplete(owner);
         }
+
+        pInfo.markDirtyParty(Collections.singletonList(quest.getID()));
     }
 
     /**

@@ -10,6 +10,7 @@ import betterquesting.api.questing.IQuest;
 import betterquesting.api.questing.tasks.ITask;
 import betterquesting.api2.cache.QuestCache;
 import betterquesting.api2.storage.DBEntry;
+import betterquesting.api2.utils.ParticipantInfo;
 import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nonnull;
@@ -230,7 +231,11 @@ public class TileEntityQuest extends TileEntityEU {
         if (task != null) {
 
             if (task.canSubmitEnergy(quest, owner, amount, voltage)) {
-                task.submitEnergy(quest, owner, amount, voltage);
+                EntityPlayerMP player = getPlayerByUUID(owner);
+                if (player != null) {
+                    task.submitEnergy(new ParticipantInfo(player), quest, owner, amount, voltage);
+                }
+
                 remainder = super.injectEnergy(directionFrom, amount, voltage);
             }
 
